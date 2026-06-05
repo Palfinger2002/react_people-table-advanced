@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../helpers/getSearchWith';
 
 export const NameFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,12 +15,7 @@ export const NameFilter = () => {
       onChange={event => {
         const value = event.target.value;
 
-        if (value === '') {
-          searchParams.delete('query');
-          setSearchParams(searchParams);
-        } else {
-          setSearchParams({ query: value });
-        }
+        setSearchParams(getSearchWith({ searchParams, key: 'query', value }));
       }}
     />
   );

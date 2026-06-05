@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { useSearchParams } from 'react-router-dom';
+import { getSearchWith } from '../../helpers/getSearchWith';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[]>([]);
@@ -37,7 +38,7 @@ export const PeoplePage = () => {
     return matchesCentury && matchesQuery && matchesSex;
   });
 
-  visiblePeople.sort((personA, personB) => {
+  [...visiblePeople].sort((personA, personB) => {
     if (sortBy === 'name') {
       if (order === 'asc') {
         return personA.name.localeCompare(personB.name);
@@ -74,19 +75,36 @@ export const PeoplePage = () => {
   });
 
   const handleSort = (field: string) => {
+    let newParams = getSearchWith({ searchParams, key: 'sort', value: field });
+
     if (sortBy !== field) {
-      searchParams.set('sort', field);
-      searchParams.set('order', 'asc');
+      newParams = getSearchWith({
+        searchParams: newParams,
+        key: 'order',
+        value: 'asc',
+      });
     } else if (sortBy === field) {
       if (order === 'asc') {
-        searchParams.set('order', 'desc');
+        newParams = getSearchWith({
+          searchParams: newParams,
+          key: 'order',
+          value: 'desc',
+        });
       } else if (order === 'desc') {
-        searchParams.delete('sort');
-        searchParams.delete('order');
+        newParams = getSearchWith({
+          searchParams: newParams,
+          key: 'sort',
+          value: null,
+        });
+        newParams = getSearchWith({
+          searchParams: newParams,
+          key: 'order',
+          value: null,
+        });
       }
     }
 
-    setSearchParams(searchParams);
+    setSearchParams(newParams);
   };
 
   useEffect(() => {
@@ -124,7 +142,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
+            {!isLoading && people.length > 0 && <PeopleFilters />}
           </div>
 
           <div className="column">

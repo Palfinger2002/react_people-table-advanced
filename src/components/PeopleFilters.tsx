@@ -1,6 +1,7 @@
 import { NameFilter } from './NameFilter';
 import { CenturyFilter } from './CenturyFilter';
 import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
 
 export const PeopleFilters = () => {
   const [searchParams] = useSearchParams();
@@ -11,18 +12,26 @@ export const PeopleFilters = () => {
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a
+        <SearchLink
           className={sex !== 'm' && sex !== 'f' ? 'is-active' : ''}
-          href="#/people"
+          params={{ sex: null }}
         >
           All
-        </a>
-        <a className={sex === 'm' ? 'is-active' : ''} href="#/people?sex=m">
+        </SearchLink>
+
+        <SearchLink
+          className={sex === 'm' ? 'is-active' : ''}
+          params={{ sex: 'm' }}
+        >
           Male
-        </a>
-        <a className={sex === 'f' ? 'is-active' : ''} href="#/people?sex=f">
+        </SearchLink>
+
+        <SearchLink
+          className={sex === 'f' ? 'is-active' : ''}
+          params={{ sex: 'f' }}
+        >
           Female
-        </a>
+        </SearchLink>
       </p>
 
       <div className="panel-block">
@@ -40,9 +49,18 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <SearchLink
+          className="button is-link is-outlined is-fullwidth"
+          params={{
+            query: null,
+            centuries: null,
+            sort: null,
+            order: null,
+            sex: null,
+          }}
+        >
           Reset all filters
-        </a>
+        </SearchLink>
       </div>
     </nav>
   );
