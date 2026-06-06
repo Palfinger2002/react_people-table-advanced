@@ -16,7 +16,6 @@ export const getSearchWith = ({
   newParams.delete(key);
 
   if (Array.isArray(value)) {
-
     value.forEach(element => {
       if (element) {
         newParams.append(key, element);

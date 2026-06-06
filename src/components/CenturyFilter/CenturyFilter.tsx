@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { useSearchParams } from 'react-router-dom';
+import { SearchLink } from '../SearchLink';
 
 export const CenturyFilter = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const CENTURIES = ['16', '17', '18', '19', '20'];
   const values = searchParams.getAll('centuries');
@@ -12,48 +13,32 @@ export const CenturyFilter = () => {
       <div className="level-left">
         {CENTURIES.map(century => {
           return (
-            <a
+            <SearchLink
               key={century}
               data-cy="century"
               className={classNames('button mr-1', {
                 'is-info': values.includes(century),
               })}
-              href={`#/people?centuries=${century}`}
-              onClick={event => {
-                event.preventDefault();
-                if (values.includes(century)) {
-                  const newValues = values.filter(value => value !== century);
-
-                  searchParams.delete('centuries');
-                  newValues.forEach(value =>
-                    searchParams.append('centuries', value),
-                  );
-                } else {
-                  searchParams.append('centuries', century);
-                }
-
-                setSearchParams(searchParams);
+              params={{
+                centuries: values.includes(century)
+                  ? values.filter(value => value !== century)
+                  : [...values, century],
               }}
             >
               {century}
-            </a>
+            </SearchLink>
           );
         })}
       </div>
 
       <div className="level-right ml-4">
-        <a
+        <SearchLink
           data-cy="centuryALL"
           className="button is-success is-outlined"
-          href="#/people"
-          onClick={event => {
-            event.preventDefault();
-            searchParams.delete('centuries');
-            setSearchParams(searchParams);
-          }}
+          params={{ centuries: null}}
         >
           All
-        </a>
+        </SearchLink>
       </div>
     </div>
   );
