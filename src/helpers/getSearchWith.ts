@@ -1,7 +1,9 @@
-interface SearchWithProps {
+export type SearchValue = string | null | undefined | string[];
+
+export interface SearchWithProps {
   searchParams: URLSearchParams;
   key: string;
-  value: string | null;
+  value: SearchValue;
 }
 
 export const getSearchWith = ({
@@ -11,9 +13,16 @@ export const getSearchWith = ({
 }: SearchWithProps) => {
   const newParams = new URLSearchParams(searchParams);
 
-  if (!value) {
-    newParams.delete(key);
-  } else {
+  newParams.delete(key);
+
+  if (Array.isArray(value)) {
+
+    value.forEach(element => {
+      if (element) {
+        newParams.append(key, element);
+      }
+    });
+  } else if (value) {
     newParams.set(key, value);
   }
 

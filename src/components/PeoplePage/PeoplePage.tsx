@@ -38,7 +38,7 @@ export const PeoplePage = () => {
     return matchesCentury && matchesQuery && matchesSex;
   });
 
-  [...visiblePeople].sort((personA, personB) => {
+  const sortedPeople = [...visiblePeople].sort((personA, personB) => {
     if (sortBy === 'name') {
       if (order === 'asc') {
         return personA.name.localeCompare(personB.name);
@@ -159,7 +159,7 @@ export const PeoplePage = () => {
                 </p>
               ) : visiblePeople.length !== 0 ? (
                 <PeopleTable
-                  people={visiblePeople}
+                  people={sortedPeople}
                   onSort={handleSort}
                   sortBy={searchParams.get('sort')}
                   order={searchParams.get('order')}
